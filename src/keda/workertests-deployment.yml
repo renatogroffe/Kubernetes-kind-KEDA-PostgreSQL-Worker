@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workertests-postgresql
+spec:
+  selector:
+    matchLabels:
+      app: workertests-postgresql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: workertests-postgresql
+    spec:
+      containers:
+        - name: workertests01
+          image: renatogroffe/workertests-dotnet8:2
+          env:
+          - name: WaitingTimeInSeconds
+            value: "5"
+          - name: ConnectionStrings__BaseContagem
+            valueFrom:
+              secretKeyRef:
+                name: workertests-postgres-secret
+                key: ConnectionPostgres

@@ -1,0 +1,19 @@
+# Trigger do PostgreSQL em KEDA
+# https://keda.sh/docs/2.14/scalers/postgresql/
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: workertests-postgresql-scaledobject
+spec:
+  pollingInterval: 20
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  scaleTargetRef:
+    name: workertests-postgresql
+  triggers:
+  - type: postgresql
+    metadata:
+      connectionFromEnv: ConnectionStrings__BaseContagem
+      query: "SELECT COUNT(1) FROM public.scalabilitysimulation"
+      targetQueryValue: "50"
+      activationTargetQueryValue: "1"
